@@ -9,19 +9,22 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5;
     private Rigidbody playerRBD;
     private Vector3 directionSideWays;
+    private float sidewaysMovementMultiplier = 35f;
     private Camera mainCamera;
-    bool alive;
-
+    bool alive = true;
+    GameManager gameManager;
     public float jumpForce; 
     public LayerMask groundMask;
 
+    private void Awake()
+    {
+        gameObject.SetActive(true);
+        gameManager = FindObjectOfType<GameManager>();
+    }
     // Start is called before the first frame update
     void Start()
     {
         playerRBD = GetComponent<Rigidbody>();
-        alive = true;
-        playerRBD.constraints = RigidbodyConstraints.None;
-        playerRBD.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     // Update is called once per frame
@@ -52,13 +55,12 @@ public class PlayerMovement : MonoBehaviour
 
         if(transform.position.y < -3)
             Invoke(nameof(Restart), 1f);
-
     }
 
     private void FixedUpdate()
     {
         MoveForward();
-        playerRBD.AddForce(directionSideWays * 35);
+        playerRBD.AddForce(directionSideWays * sidewaysMovementMultiplier);
     }
 
     void MoveForward()
@@ -71,14 +73,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if(collision.gameObject.tag == "Obstacle")
         {
-            alive = false;
-            playerRBD.constraints = RigidbodyConstraints.FreezePosition;
-            playerRBD.constraints = RigidbodyConstraints.FreezeRotation;
+            gameObject.SetActive(false);
+            gameManager.isPlayerDead = true;
             Invoke(nameof(Restart), 1f);
         }
         else if(collision.gameObject.tag == "Coin")
         {
             Destroy(collision.gameObject);
+            speed += 0.1f;
+            sidewaysMovementMultiplier += 0.1f;
         }
     }
     void Restart()
@@ -88,10 +91,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
-        // Check whether we are currently grounded
         float height = GetComponent<Collider>().bounds.size.y;
         bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.1f, groundMask);
-        // If we are, jump
         playerRBD.AddForce(Vector3.up * jumpForce);
     }
 }

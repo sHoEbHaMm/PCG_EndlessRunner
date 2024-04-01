@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public TMP_Text scoreNumberText;
     int score;
+    public bool isPlayerDead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,8 +19,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(nameof(ScoreIncrementer));
-        scoreNumberText.text = score.ToString();
+        if(isPlayerDead == false)
+        {
+            StartCoroutine(nameof(ScoreIncrementer));
+            scoreNumberText.text = score.ToString();
+        }
+
     }
 
     IEnumerator ScoreIncrementer()
