@@ -16,6 +16,7 @@ public class CamFollow : MonoBehaviour
     {
         Vector3 targetPosition = playerTransform.position + offset;
         targetPosition.x = 0;
+        targetPosition.y = transform.position.y;
         transform.position = targetPosition;
     }
 }
