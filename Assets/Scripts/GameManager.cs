@@ -7,7 +7,8 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public TMP_Text scoreNumberText;
-    int score;
+    public TMP_Text coinNumberText;
+    int score, coins;
     public bool isPlayerDead = false;
 
     // Start is called before the first frame update
@@ -23,6 +24,12 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(nameof(ScoreIncrementer));
             scoreNumberText.text = score.ToString();
+            coinNumberText.text = coins.ToString();
+        }
+
+        if(Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
         }
 
     }
@@ -31,5 +38,10 @@ public class GameManager : MonoBehaviour
     {
         score += 1;
         yield return new WaitForSeconds(10);
+    }
+
+    public void AddACoin()
+    {
+        coins += 1;
     }
 }

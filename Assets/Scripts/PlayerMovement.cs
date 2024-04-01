@@ -80,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
         else if(collision.gameObject.tag == "Coin")
         {
             Destroy(collision.gameObject);
+            gameManager.AddACoin();
             speed += 0.1f;
             sidewaysMovementMultiplier += 0.1f;
         }
