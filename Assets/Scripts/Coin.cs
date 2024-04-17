@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviour, IScoreObserver
 {
+    private ScoreSystem scoreSystem;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        scoreSystem = FindObjectOfType<ScoreSystem>();
+        scoreSystem.AddObserver(this);
     }
 
     // Update is called once per frame
@@ -23,5 +26,15 @@ public class Coin : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if(collision.gameObject.tag == "Player")
+        {
+            scoreSystem.IncreaseScore(1);
+        }
+    }
+
+    public void OnScoreChanged(int score)
+    {
+
     }
 }

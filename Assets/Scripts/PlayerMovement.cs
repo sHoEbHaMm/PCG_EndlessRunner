@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Cinemachine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,10 +16,12 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce; 
     public LayerMask groundMask;
 
+
     private void Awake()
     {
         gameObject.SetActive(true);
         gameManager = FindObjectOfType<GameManager>();
+
     }
     // Start is called before the first frame update
     void Start()

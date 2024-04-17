@@ -4,17 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IScoreObserver
 {
     public TMP_Text scoreNumberText;
     public TMP_Text coinNumberText;
     int score, coins;
     public bool isPlayerDead = false;
-
+    ScoreSystem scoreSystem;
+    AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
         score = 0;
+        scoreSystem = FindObjectOfType<ScoreSystem>();
+        scoreSystem.AddObserver(this);
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -24,7 +28,6 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(nameof(ScoreIncrementer));
             scoreNumberText.text = score.ToString();
-            coinNumberText.text = coins.ToString();
         }
 
         if(Input.GetKey(KeyCode.Escape))
@@ -42,6 +45,12 @@ public class GameManager : MonoBehaviour
 
     public void AddACoin()
     {
-        coins += 1;
+        scoreSystem.IncreaseScore(1);
+        audioSource.Play();
+    }
+
+    public void OnScoreChanged(int score)
+    {
+        coinNumberText.text = scoreSystem.coins.ToString();
     }
 }
