@@ -8,10 +8,14 @@ public class GameManager : MonoBehaviour, IScoreObserver
 {
     public TMP_Text scoreNumberText;
     public TMP_Text coinNumberText;
+    public TMP_Text useGunText;
     int score, coins;
     public bool isPlayerDead = false;
     ScoreSystem scoreSystem;
     AudioSource audioSource;
+    public GameObject gun;
+    ShootingPowerUp powerUp;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +23,9 @@ public class GameManager : MonoBehaviour, IScoreObserver
         scoreSystem = FindObjectOfType<ScoreSystem>();
         scoreSystem.AddObserver(this);
         audioSource = GetComponent<AudioSource>();
+        powerUp = gun.GetComponent<ShootingPowerUp>();
+        powerUp.enabled = false;
+        useGunText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -33,6 +40,11 @@ public class GameManager : MonoBehaviour, IScoreObserver
         if(Input.GetKey(KeyCode.Escape))
         {
             Application.Quit();
+        }
+
+        if(scoreSystem.coins == 10)
+        {
+            StartCoroutine(EnableGun());
         }
 
     }
@@ -52,5 +64,26 @@ public class GameManager : MonoBehaviour, IScoreObserver
     public void OnScoreChanged(int score)
     {
         coinNumberText.text = scoreSystem.coins.ToString();
+    }
+
+    IEnumerator EnableGun()
+    {
+        useGunText.gameObject.SetActive(true);
+        
+        gun.gameObject.SetActive(true);
+        powerUp.enabled = true;
+        yield return new WaitForSeconds(10f);
+        StartCoroutine(DisableGun());
+
+    }
+
+    IEnumerator DisableGun()
+    {
+        useGunText.gameObject.SetActive(false);
+        powerUp.enabled = false;
+        gun.gameObject.SetActive(false);
+       
+        yield return new WaitForSeconds(10f);
+        StartCoroutine(EnableGun());
     }
 }

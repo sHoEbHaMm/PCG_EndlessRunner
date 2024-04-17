@@ -15,13 +15,13 @@ public class PlayerMovement : MonoBehaviour
     GameManager gameManager;
     public float jumpForce; 
     public LayerMask groundMask;
-
+    CameraShake cameraShake;
 
     private void Awake()
     {
         gameObject.SetActive(true);
         gameManager = FindObjectOfType<GameManager>();
-
+        cameraShake = FindObjectOfType<CameraShake>();
     }
     // Start is called before the first frame update
     void Start()
