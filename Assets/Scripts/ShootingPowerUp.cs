@@ -17,9 +17,9 @@ public class ShootingPowerUp : MonoBehaviour
     {
         if(enabled)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y, transform.position.z), Vector3.forward, out raycast, 100))
+                if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y, transform.position.z), Vector3.forward, out raycast, 1000))
                 {
                     if (raycast.collider.tag == "Obstacle")
                     {

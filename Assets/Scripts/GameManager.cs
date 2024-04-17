@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour, IScoreObserver
 {
     public TMP_Text scoreNumberText;
     public TMP_Text coinNumberText;
     public TMP_Text useGunText;
+    public Image LMB_IMG;
     int score, coins;
     public bool isPlayerDead = false;
     ScoreSystem scoreSystem;
@@ -26,27 +27,29 @@ public class GameManager : MonoBehaviour, IScoreObserver
         powerUp = gun.GetComponent<ShootingPowerUp>();
         powerUp.enabled = false;
         useGunText.gameObject.SetActive(false);
+        LMB_IMG.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(isPlayerDead == false)
-        {
-            StartCoroutine(nameof(ScoreIncrementer));
-            scoreNumberText.text = score.ToString();
-        }
 
-        if(Input.GetKey(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+            if (isPlayerDead == false)
+            {
+                StartCoroutine(nameof(ScoreIncrementer));
+                scoreNumberText.text = score.ToString();
+            }
 
-        if(scoreSystem.coins == 10)
-        {
-            StartCoroutine(EnableGun());
-        }
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
 
+            if (scoreSystem.coins == 10)
+            {
+                StartCoroutine(EnableGun());
+            }
+       
     }
 
     IEnumerator ScoreIncrementer()
@@ -72,6 +75,7 @@ public class GameManager : MonoBehaviour, IScoreObserver
         
         gun.gameObject.SetActive(true);
         powerUp.enabled = true;
+        LMB_IMG.gameObject.SetActive(true);
         yield return new WaitForSeconds(10f);
         StartCoroutine(DisableGun());
 
@@ -82,8 +86,13 @@ public class GameManager : MonoBehaviour, IScoreObserver
         useGunText.gameObject.SetActive(false);
         powerUp.enabled = false;
         gun.gameObject.SetActive(false);
-       
+        LMB_IMG.gameObject.SetActive(false);
         yield return new WaitForSeconds(10f);
         StartCoroutine(EnableGun());
+    }
+
+    void ResetTimeScale()
+    {
+        Time.timeScale = 1;
     }
 }
