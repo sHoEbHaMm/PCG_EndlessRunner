@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private float sidewaysMovementMultiplier = 35f;
     private Camera mainCamera;
     bool alive = true;
+    bool isInAir = false;
     GameManager gameManager;
     public float jumpForce; 
     public LayerMask groundMask;
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
                 //moveright
                 directionSideWays = Vector3.right;
             }
-            else if (Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space) && !isInAir)
             {
                 Jump();
             }
@@ -63,12 +64,14 @@ public class PlayerMovement : MonoBehaviour
     {
         MoveForward();
         playerRBD.AddForce(directionSideWays * sidewaysMovementMultiplier);
+        isInAir = !isGrounded();
     }
 
     void MoveForward()
     {
         Vector3 moveVector = transform.forward * speed * Time.deltaTime;
         playerRBD.MovePosition(playerRBD.position + moveVector);
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -97,5 +100,18 @@ public class PlayerMovement : MonoBehaviour
         float height = GetComponent<Collider>().bounds.size.y;
         bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.1f, groundMask);
         playerRBD.AddForce(Vector3.up * jumpForce);
+    }
+
+    bool isGrounded()
+    {
+        RaycastHit raycastHit;
+        if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out raycastHit, 2f, groundMask))
+        {
+            Debug.Log("On Ground");
+            return true;
+        }
+
+        Debug.Log("------ Not On Ground");
+        return false;
     }
 }
