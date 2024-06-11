@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using System;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : Subject
 {
     public float speed = 5;
     private Rigidbody playerRBD;
@@ -85,7 +86,8 @@ public class PlayerMovement : MonoBehaviour
         else if(collision.gameObject.tag == "Coin")
         {
             Destroy(collision.gameObject);
-            gameManager.AddACoin();
+            //gameManager.AddACoin();
+            NotifyObservers();
             speed += 0.1f;
             sidewaysMovementMultiplier += 0.1f;
         }
@@ -107,11 +109,11 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit raycastHit;
         if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out raycastHit, 2f, groundMask))
         {
-            Debug.Log("On Ground");
+            //Debug.Log("On Ground");
             return true;
         }
 
-        Debug.Log("------ Not On Ground");
+        //Debug.Log("------ Not On Ground");
         return false;
     }
 }

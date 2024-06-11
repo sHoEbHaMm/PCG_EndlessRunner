@@ -1,33 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class ScoreSystem : MonoBehaviour
+public class ScoreSystem : MonoBehaviour, IObserver
 {
-    private List<IScoreObserver> observers = new List<IScoreObserver>();
-    public int coins = 0;
+    [SerializeField] Subject _playerSubject;
+    [SerializeField] TMP_Text scoreText;
 
-    public void AddObserver(IScoreObserver observer)
+    int numberOfCoinsCollected = 0;
+
+    public int GetNumberOfCoinCollected() { return numberOfCoinsCollected; }
+
+    private void Start()
     {
-        observers.Add(observer);
+        _playerSubject.AddObserver(this);
     }
 
-    public void RemoveObserver(IScoreObserver observer)
-    {
-        observers.Remove(observer);
-    }
-
-    public void IncreaseScore(int amount)
-    {
-        coins += amount;
-        NotifyObservers();
-    }
-
-    private void NotifyObservers()
-    {
-        foreach(var observer in observers)
-        {
-            observer.OnScoreChanged(coins);
-        }
-    }
+   public void OnNotify()
+   {
+        numberOfCoinsCollected++;
+        scoreText.text = numberOfCoinsCollected.ToString();
+   }
 }
